@@ -1,0 +1,151 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Login & Registro',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: LoginScreen(),
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      // Aquí iría la lógica de autenticación con la base de datos
+      print('Usuario: ${_userController.text}, Contraseña: ${_passwordController.text}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Iniciar Sesión")),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: _userController,
+                decoration: InputDecoration(labelText: 'Usuario'),
+                validator: (value) => value!.isEmpty ? 'Ingrese su usuario' : null,
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Contraseña'),
+                obscureText: true,
+                validator: (value) => value!.isEmpty ? 'Ingrese su contraseña' : null,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _login,
+                child: Text('Ingresar'),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text('Olvidaste la contraseña?'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  );
+                },
+                child: Text('No tienes cuenta? Regístrate'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RegisterScreen extends StatefulWidget {
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      // Aquí iría la lógica de registro con la base de datos
+      print('Registrando usuario: ${_nameController.text}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Registro")),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Nombre Completo'),
+                validator: (value) => value!.isEmpty ? 'Ingrese su nombre' : null,
+              ),
+              TextFormField(
+                controller: _idController,
+                decoration: InputDecoration(labelText: 'Cédula'),
+                validator: (value) => value!.isEmpty ? 'Ingrese su cédula' : null,
+              ),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(labelText: 'Número de Teléfono'),
+                validator: (value) => value!.isEmpty ? 'Ingrese su teléfono' : null,
+              ),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Correo Electrónico'),
+                validator: (value) => value!.isEmpty ? 'Ingrese su correo' : null,
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Contraseña'),
+                obscureText: true,
+                validator: (value) => value!.length < 6 ? 'La contraseña debe tener al menos 6 caracteres' : null,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _register,
+                child: Text('Registrarse'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
