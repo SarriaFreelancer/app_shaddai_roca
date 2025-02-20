@@ -33,6 +33,14 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(255),
     defaultValue: null,
   },
+  terms_accepted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // Por defecto, el usuario no ha aceptado
+  },
+  terms_version: {
+    type: DataTypes.STRING(10),
+    allowNull: true, // Se guarda la versión de los términos aceptados
+  },
 }, {
   timestamps: false,
   tableName: 'usuarios',

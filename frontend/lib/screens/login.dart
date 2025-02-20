@@ -40,31 +40,46 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await ApiService.login(email, password);
+      print("🟢 Respuesta del backend: $response"); // 👈 Verificar respuesta
 
-      if (response["success"]) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (response["success"] == true) {
+        if (response.containsKey("user") && response["user"] != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('email', email);
 
-        // Obtener datos guardados de términos
-        bool acceptedTerms = prefs.getBool('accepted_terms') ?? false;
-        String savedTermsVersion = prefs.getString('terms_version') ?? "";
+          bool acceptedTerms =
+              response["user"]["terms_accepted"].toString() == "1" ||
+                  response["user"]["terms_accepted"] == true;
 
-        // Verificar si es la primera vez o si los términos han cambiado
-        if (!acceptedTerms || savedTermsVersion != currentTermsVersion) {
-          await prefs.setString(
-              'terms_version', currentTermsVersion); // Guardar nueva versión
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TermsPage()),
-          );
+          String savedTermsVersion =
+              response["user"]["terms_version"]?.toString() ?? "1.0";
+
+          print("🟢 Términos aceptados: $acceptedTerms");
+          print("🟢 Versión guardada: $savedTermsVersion");
+
+          if (acceptedTerms && savedTermsVersion == currentTermsVersion) {
+            print("✅ Ir al HomePage");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          } else {
+            print("⚠️ Mostrar TermsPage");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const TermsPage()),
+            );
+          }
         } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content:
+                    Text("Error: No se encontró información del usuario.")),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response["message"])),
+          SnackBar(content: Text(response["message"] ?? "Error desconocido.")),
         );
       }
     } catch (e) {

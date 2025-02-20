@@ -38,19 +38,48 @@ class ApiService {
     final response = await http.post(
       Uri.parse("$baseUrl/login"),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "email": email,
-        "password": password,
-      }),
+      body: jsonEncode({"email": email, "password": password}),
     );
 
     final responseData = jsonDecode(response.body);
+    print("🔍 Respuesta del servidor: $responseData"); // 👈 Para depurar
+
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', responseData['token']);
-      return {"success": true, "message": "Inicio de sesión exitoso"};
+      await prefs.setString(
+          'email', responseData['user']['email']); // Guardar email
+      await prefs.setBool(
+          'termn_accepted', responseData['user']['termn_accepted'] == 1);
+      await prefs.setString(
+          'terms_version', responseData['user']['terms_version'] ?? "1.0");
+
+      return {
+        "success": true,
+        "message": "Inicio de sesión exitoso",
+        "user": responseData["user"]
+      };
     } else {
       return {"success": false, "message": responseData['error']};
+    }
+  }
+
+  // Aceptación de terminos y condiciones
+  static Future<Map<String, dynamic>> acceptTerms(
+      String email, String termsVersion) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/accept-terms"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "email": email,
+        "terms_version": termsVersion,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception("Error al aceptar términos: ${response.body}");
     }
   }
 }
