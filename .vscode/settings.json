@@ -1,3 +1,5 @@
 {
-    "editor.wordBasedSuggestions": "matchingDocuments"
+    "editor.wordBasedSuggestions": "matchingDocuments",
+    "cmake.sourceDirectory": "D:/informacion/Desarrollo/shaddai_roca/frontend/windows",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

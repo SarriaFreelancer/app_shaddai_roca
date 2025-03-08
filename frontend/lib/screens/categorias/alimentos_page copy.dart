@@ -99,9 +99,6 @@ class _AlimentosPageState extends State<AlimentosPage> {
       productControllers.clear();
       priceControllers.clear();
       _inicializarListas();
-      iva = 0.19; // Reiniciar valores del IVA
-      total = 0; // Reiniciar el total
-      valorGeneral = 0; // Reiniciar el valor general
     });
     _guardarDatos();
   }
@@ -178,9 +175,6 @@ class _AlimentosPageState extends State<AlimentosPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              // Agregar gráfico de barras
-              _buildBarChart(),
-              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: guardarCompra,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
@@ -242,31 +236,6 @@ class _AlimentosPageState extends State<AlimentosPage> {
               style: TextStyle(
                   fontSize: 14, color: highlight ? Colors.green : Colors.black),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Gráfico de barras con fl_chart
-  Widget _buildBarChart() {
-    return SizedBox(
-      height: 200,
-      child: BarChart(
-        BarChartData(
-          gridData: FlGridData(show: false),
-          titlesData: FlTitlesData(show: false),
-          borderData: FlBorderData(show: false),
-          barGroups: [
-            BarChartGroupData(
-                x: 0,
-                barRods: [BarChartRodData(toY: iva * 100, color: Colors.blue)]),
-            BarChartGroupData(
-                x: 1,
-                barRods: [BarChartRodData(toY: total, color: Colors.red)]),
-            BarChartGroupData(x: 2, barRods: [
-              BarChartRodData(toY: valorGeneral, color: Colors.green)
-            ]),
           ],
         ),
       ),

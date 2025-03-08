@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  bool _isObscure = true; // Estado para ocultar/mostrar contraseña
 
   // Versión actual de los términos (actualizar cuando haya cambios)
   static const String currentTermsVersion = "1.0";
@@ -111,12 +112,22 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 10),
             TextField(
               controller: passwordController,
+              obscureText: _isObscure, // Usamos el estado para ocultar/mostrar
               decoration: InputDecoration(
                 labelText: "Contraseña",
                 filled: true,
                 fillColor: Colors.grey[800],
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
             ),
             const SizedBox(height: 10),
             TextButton(
